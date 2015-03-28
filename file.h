@@ -1,14 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-
-typedef struct {
-	int genes;
-	double **probabilityTable;
-	char *names[];
-} probMatrix;
-
+#include "utils.h"
 
 probMatrix* readFile(char* fileName);
-void printMatrix(probMatrix * matrix);
+void saveFile(probMatrix *matrix, char *fileName);
