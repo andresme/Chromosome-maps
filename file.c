@@ -1,13 +1,5 @@
 #include "file.h"
 
-/* Test Function
-int main(int argc, char *argv[]) {
-	probMatrix* matrix = readFile(argv[1]);
-	saveFile(matrix, argv[2]);
-	return(0);
-}
-*/
-
 probMatrix* readFile(char* fileName) {
 	char * fname;
 	FILE *file;
