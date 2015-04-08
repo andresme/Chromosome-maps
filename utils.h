@@ -12,7 +12,7 @@
 
 void printMatrix(probMatrix * matrix);
 int cmpDouble(double a, double b);
-int checkValidity(probMatrix *matrix);
-void possibleNumber(probMatrix *matrix);
+int isValid(probMatrix *matrix);
+MatrixList* possibleNumber(probMatrix *matrix);
 
 #endif

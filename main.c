@@ -6,7 +6,8 @@ int main(int argc, char *argv[]) {
 	// add(matrix, list);
 	// add(matrix, list);
 	// display(list);
-	possibleNumber(matrix);
-	//printf("valid: %d\n	", checkValidity(matrix));
+	MatrixList *possibles = possibleNumber(matrix);
+	display(possibles);
+	//printf("valid: %d\n	", isValid(matrix));
 	return(0);
 }
