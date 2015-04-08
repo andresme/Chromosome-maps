@@ -63,36 +63,47 @@ probMatrix* copyMatrix(probMatrix *matrix){
 	return pMatrix;
 }
 
-void possibleNumber(probMatrix *matrix){
+int isComplete(probMatrix *matrix){
+	return 1;
+}
+
+MatrixList* possibleNumber(probMatrix *matrix){
 	MatrixList *list = emptyMatrixList();
-	for(int i = 0; i < matrix->genes; i++){
-		for(int j = i+1; j < matrix->genes - 1; j++){
-			double sum1 = matrix->probabilityTable[i][j];
-			double sum2 = matrix->probabilityTable[j][j+1];
-			double checkSum = matrix->probabilityTable[i][j+1];
-			
-			if(cmpDouble(sum1, -1) == 1){
-				double first = fabs(checkSum-sum2);
-				double second = checkSum+sum2;
+	add(matrix, list);
+	MatrixList *completeList = emptyMatrixList();
+	
+	MatrixNode * current = list->head;
+	while(current != NULL){
+		for(int i = 0; i < current->matrix->genes; i++){
+			for(int j = i+1; j < current->matrix->genes - 1; j++){
+				double sum1 = current->matrix->probabilityTable[i][j];
+				for(int m = 1; i+m < matrix->genes; m++){
+					double sum2 = matrix->probabilityTable[j][j+m];
+					double checkSum = matrix->probabilityTable[i][j+m];		
+					
+					if(cmpDouble(sum1, -1) == 1 && cmpDouble(sum2, -1) == 0 && cmpDouble(checkSum, -1) == 0){
+						double first = fabs(checkSum-sum2);
+						double second = checkSum+sum2;
 				
-				probMatrix* firstMatrix = copyMatrix(matrix);
-				firstMatrix->probabilityTable[i][j] = first;
-				add(firstMatrix, list);
-				
-				probMatrix* secondMatrix = copyMatrix(matrix);
-				secondMatrix->probabilityTable[i][j] = second;
-				add(secondMatrix, list);
+						probMatrix* firstMatrix = copyMatrix(current->matrix);
+						firstMatrix->probabilityTable[i][j] = first;
+						add(firstMatrix, list);
+						
+						probMatrix* secondMatrix = copyMatrix(current->matrix);
+						secondMatrix->probabilityTable[i][j] = second;
+						add(secondMatrix, list);
+						
+					} else if(cmpDouble(sum2, -1) == 1 && cmpDouble(checkSum(sum1, -1) == 0 && cmpDouble(checkSum, -1) == 0){
+						
+					} else if(cmpDouble(checkSum, -1) == 1 && cmpDouble(checkSum(sum1, -1) == 0 && cmpDouble(sum2, -1) == 0){
+						
+					}
+				}
+
 			}
 		}
-	}
-	MatrixNode * current = list->head;
-	if(list->head == NULL) 
-		return;
-	while(current->next != NULL){
-		printMatrix(current->matrix);
 		current = current->next;
 	}
-	printMatrix(current->matrix);
 }
 
 

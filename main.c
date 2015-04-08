@@ -7,6 +7,6 @@ int main(int argc, char *argv[]) {
 	// add(matrix, list);
 	// display(list);
 	possibleNumber(matrix);
-	printf("valid: %d\n	", checkValidity(matrix));
+	//printf("valid: %d\n	", checkValidity(matrix));
 	return(0);
 }
