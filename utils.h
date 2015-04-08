@@ -7,15 +7,12 @@
 #include <string.h>
 #include <limits.h>
 #include <tgmath.h>
-
-typedef struct {
-	int genes;
-	double **probabilityTable;
-	char *names[];
-} probMatrix;
+#include "structs.h"
+#include "list.h"
 
 void printMatrix(probMatrix * matrix);
 int cmpDouble(double a, double b);
 int checkValidity(probMatrix *matrix);
+void possibleNumber(probMatrix *matrix);
 
 #endif
