@@ -81,9 +81,7 @@ MatrixList* possibleNumber(probMatrix *matrix){
 	MatrixList *completeList = emptyMatrixList();
 
 	MatrixNode * current = list->head;
-	int found = 0;
 	while(current != NULL){
-		found = 0;
 		for(int i = 0; i < current->matrix->genes; i++){
 			for(int j = i+1; j < current->matrix->genes - 1; j++){
 				double sum1 = current->matrix->probabilityTable[i][j];
@@ -139,8 +137,6 @@ MatrixList* possibleNumber(probMatrix *matrix){
 							// printMatrix(secondMatrix);
 							add(secondMatrix, list);
 						}
-						found = 1;
-						break;
 					}
 				}
 			}
