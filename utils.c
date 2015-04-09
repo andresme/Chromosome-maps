@@ -92,6 +92,7 @@ MatrixList* possibleNumber(probMatrix *matrix){
 					double second = 0;
 					int indexI = -1;
 					int indexJ = -1;
+					printf("i:%d,j:%d,m:%d\n",i,j,m);
 					if(cmpDouble(sum1, -1) == 1 && cmpDouble(sum2, -1) == 0 && cmpDouble(checkSum, -1) == 0){
 						first = fabs(checkSum-sum2);
 						second = checkSum+sum2;
@@ -113,29 +114,22 @@ MatrixList* possibleNumber(probMatrix *matrix){
 						probMatrix* firstMatrix = copyMatrix(current->matrix);
 						firstMatrix->probabilityTable[indexI][indexJ] = first;
 						if(isComplete(firstMatrix) == 1){
-							// printMatrix(firstMatrix);
-							if(isValid(firstMatrix) == 1){
-								add(firstMatrix, completeList);
-							} else {
-								free(firstMatrix);
-							}
+							printMatrix(firstMatrix);
+							add(firstMatrix, completeList);
 						} else {
-							// printMatrix(firstMatrix);
+							//printMatrix(firstMatrix);
 							add(firstMatrix, list);
 						}
-
-						probMatrix* secondMatrix = copyMatrix(current->matrix);
-						secondMatrix->probabilityTable[indexI][indexJ] = second;
-						if(isComplete(secondMatrix) == 1){
-							// printMatrix(secondMatrix);
-							if(isValid(secondMatrix) == 1){
+						if(cmpDouble(first, second) == 0){
+							probMatrix* secondMatrix = copyMatrix(current->matrix);
+							secondMatrix->probabilityTable[indexI][indexJ] = second;
+							if(isComplete(secondMatrix) == 1){
+								printMatrix(secondMatrix);
 								add(secondMatrix, completeList);
 							} else {
-								free(secondMatrix);
+								//printMatrix(secondMatrix);
+								add(secondMatrix, list);
 							}
-						} else {
-							// printMatrix(secondMatrix);
-							add(secondMatrix, list);
 						}
 					}
 				}
