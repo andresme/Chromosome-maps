@@ -17,7 +17,7 @@ MatrixList * emptyMatrixList(){
 
 void display(MatrixList * list) {
   MatrixNode * current = list->head;
-  if(list->head == NULL) 
+  if(list->head == NULL)
     return;
   while(current->next != NULL){
     printMatrix(current->matrix);
@@ -32,7 +32,7 @@ void add(probMatrix *matrix, MatrixList *list){
     list->head = createnode(matrix);
   }
   else {
-    current = list->head; 
+    current = list->head;
     while (current->next!=NULL){
       current = current->next;
     }
@@ -41,20 +41,20 @@ void add(probMatrix *matrix, MatrixList *list){
 }
 
 void delete(MatrixNode *node, MatrixList *list){
-  MatrixNode *current = list->head;            
-  MatrixNode *previous = current;           
-  while(current != NULL){           
-    if(current == node){      
+  MatrixNode *current = list->head;
+  MatrixNode *previous = current;
+  while(current != NULL){
+    if(current == node){
       previous->next = current->next;
       if(current == list->head)
         list->head = current->next;
       free(current);
       return;
-    }                               
-    previous = current;             
-    current = current->next;        
-  }                                 
-}         
+    }
+    previous = current;
+    current = current->next;
+  }
+}
 
 void destroy(MatrixList *list){
   MatrixNode * current = list->head;
@@ -89,7 +89,7 @@ void addGene(char *gene, double distance, GeneList *list){
     list->head = createGeneNode(gene, distance);
   }
   else {
-    current = list->head; 
+    current = list->head;
     while (current->next!=NULL){
       current = current->next;
     }
@@ -99,7 +99,7 @@ void addGene(char *gene, double distance, GeneList *list){
 
 void displayGeneList(GeneList *list) {
   GeneNode * current = list->head;
-  if(list->head == NULL) 
+  if(list->head == NULL)
     return;
   while(current->next != NULL){
     printf("%s -", current->gene);
@@ -118,6 +118,62 @@ void destroyGeneList(GeneList *list){
   }
   free(list);
 }
+
+
+// Value list
+ValueList * emptyValueList(){
+  ValueList * list = malloc(sizeof(ValueList));
+  list->head = NULL;
+  return list;
+}
+
+ValueNode * createValueNode(int i, int j, double value){
+  ValueNode * newNode = malloc(sizeof(ValueNode));
+  newNode->i = i;
+  newNode->j = j;
+  newNode->value = value;
+  newNode->next = NULL;
+  return newNode;
+}
+
+void addValue(int i, int j, double value, ValueList *list){
+  ValueNode *current = NULL;
+  if(list->head == NULL){
+    list->head = createValueNode(i, j, value);
+  }
+  else {
+    current = list->head;
+    while (current->next!=NULL){
+      current = current->next;
+    }
+    current->next = createValueNode(i, j, value);
+  }
+}
+
+void displayValueList(ValueList *list){
+  ValueNode * current = list->head;
+  if(list->head == NULL)
+    return;
+  while(current->next != NULL){
+    printf("%d, %d = %f\n", current->i, current->j, current->value);
+    current = current->next;
+  }
+  printf("%d, %d = %f\n", current->i, current->j, current->value);
+}
+
+
+void destroyValueList(ValueList *list){
+  ValueNode * current = list->head;
+  ValueNode * next = current;
+  while(current != NULL){
+    next = current->next;
+    free(current);
+    current = next;
+  }
+  free(list);
+}
+
+
 
 // Map list
 
@@ -140,7 +196,7 @@ void addMap(GeneList *map, MapList *list){
     list->head = createMapNode(map);
   }
   else {
-    current = list->head; 
+    current = list->head;
     while (current->next!=NULL){
       current = current->next;
     }
@@ -150,7 +206,7 @@ void addMap(GeneList *map, MapList *list){
 
 void displayMapList(MapList *list){
   MapNode * current = list->head;
-  if(list->head == NULL) 
+  if(list->head == NULL)
     return;
   while(current->next != NULL){
     displayGeneList(current->map);

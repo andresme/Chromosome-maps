@@ -13,6 +13,7 @@
 void printMatrix(probMatrix * matrix);
 int cmpDouble(double a, double b);
 int isValid(probMatrix *matrix);
+int isAlreadyCalculated(int i, int j, double value, ValueList *list);
 MatrixList* possibleNumber(probMatrix *matrix);
 MapList * calculatePossibleMaps(MatrixList *matrices);
 

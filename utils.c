@@ -75,8 +75,20 @@ int isComplete(probMatrix *matrix){
 	return 1;
 }
 
+int isAlreadyCalculated(int i, int j, double value, ValueList *list){
+	ValueNode *current = list->head;
+	while(current != NULL){
+		if(current->i == i && current->j == j && cmpDouble(current->value, value) == 1){
+			return 1;
+		}
+		current = current->next;
+	}
+	return 0;
+}
+
 MatrixList* possibleNumber(probMatrix *matrix){
 	MatrixList *list = emptyMatrixList();
+	ValueList *values = emptyValueList();
 	add(matrix, list);
 	MatrixList *completeList = emptyMatrixList();
 
@@ -92,7 +104,7 @@ MatrixList* possibleNumber(probMatrix *matrix){
 					double second = 0;
 					int indexI = -1;
 					int indexJ = -1;
-					printf("i:%d,j:%d,m:%d\n",i,j,m);
+					//printf("i:%d,j:%d,m:%d\n",i,j,m);
 					if(cmpDouble(sum1, -1) == 1 && cmpDouble(sum2, -1) == 0 && cmpDouble(checkSum, -1) == 0){
 						first = fabs(checkSum-sum2);
 						second = checkSum+sum2;
@@ -113,22 +125,30 @@ MatrixList* possibleNumber(probMatrix *matrix){
 					if(indexI != -1 && indexJ != -1){
 						probMatrix* firstMatrix = copyMatrix(current->matrix);
 						firstMatrix->probabilityTable[indexI][indexJ] = first;
-						if(isComplete(firstMatrix) == 1){
-							printMatrix(firstMatrix);
-							add(firstMatrix, completeList);
-						} else {
+						if(isComplete(firstMatrix) == 1 /*&& isAlreadyCalculated(indexI, indexJ, first, values) == 0*/){
 							//printMatrix(firstMatrix);
+							add(firstMatrix, completeList);
+							addValue(indexI, indexJ, first, values);
+						} else if(isAlreadyCalculated(indexI, indexJ, first, values) == 0){
+							//printMatrix(firstMatrix);
+							addValue(indexI, indexJ, first, values);
 							add(firstMatrix, list);
+						} else {
+							free(firstMatrix);
 						}
 						if(cmpDouble(first, second) == 0){
 							probMatrix* secondMatrix = copyMatrix(current->matrix);
 							secondMatrix->probabilityTable[indexI][indexJ] = second;
-							if(isComplete(secondMatrix) == 1){
-								printMatrix(secondMatrix);
+							if(isComplete(secondMatrix) == 1 /*&& isAlreadyCalculated(indexI, indexJ, second, values) == 0*/){
+							//	printMatrix(secondMatrix);
 								add(secondMatrix, completeList);
-							} else {
+								addValue(indexI, indexJ, second, values);
+							} else if(isAlreadyCalculated(indexI, indexJ, second, values) == 0){
 								//printMatrix(secondMatrix);
+								addValue(indexI, indexJ, second, values);
 								add(secondMatrix, list);
+							} else {
+								free(secondMatrix);
 							}
 						}
 					}
@@ -137,6 +157,7 @@ MatrixList* possibleNumber(probMatrix *matrix){
 		}
 		current = current->next;
 	}
+	destroyValueList(values);
 	return completeList;
 }
 
@@ -165,5 +186,3 @@ MapList * calculatePossibleMaps(MatrixList *matrices){
 	}
 	return result;
 }
-
-
