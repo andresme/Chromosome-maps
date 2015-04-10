@@ -29,4 +29,13 @@ typedef struct geneList {
   GeneNode * head; 
 } GeneList;
 
+typedef struct mapNode {
+  GeneList *map;
+  struct mapNode *next;/* data */
+} MapNode;
+
+typedef struct mapList {
+  MapNode * head;
+} MapList;
+
 #endif

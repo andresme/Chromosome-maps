@@ -11,12 +11,15 @@ void add(probMatrix *matrix, MatrixList *list);
 void display(MatrixList *list);
 void destroy(MatrixList *list);
 void delete(MatrixNode *node, MatrixList *list);
-//void reverse(List * list);
 
 GeneList * emptyNodeList();
 void addGene(char *gene, double distance, GeneList *list);
 void displayGeneList(GeneList *list);
 void destroyGeneList(GeneList *list);
-//void reverse(List * list);
+
+MapList * emptyMapList();
+void addMap(GeneList *map, MapList *list);
+void displayMapList(MapList *list);
+void destroyMapList(MapList *list);
 
 #endif

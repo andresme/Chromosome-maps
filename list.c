@@ -1,5 +1,7 @@
 #include "list.h"
 
+// Matrix list
+
 MatrixNode * createnode(probMatrix *matrix){
   MatrixNode * newNode = malloc(sizeof(MatrixNode));
   newNode->matrix = matrix;
@@ -65,6 +67,8 @@ void destroy(MatrixList *list){
   free(list);
 }
 
+// Gene list
+
 GeneList * emptyNodeList(){
   GeneList * list = malloc(sizeof(GeneList));
   list->head = NULL;
@@ -107,6 +111,57 @@ void displayGeneList(GeneList *list) {
 void destroyGeneList(GeneList *list){
   GeneNode * current = list->head;
   GeneNode * next = current;
+  while(current != NULL){
+    next = current->next;
+    free(current);
+    current = next;
+  }
+  free(list);
+}
+
+// Map list
+
+MapNode * createMapNode(GeneList *map){
+  MapNode * newNode = malloc(sizeof(MapNode));
+  newNode->map = map;
+  newNode->next = NULL;
+  return newNode;
+}
+
+MapList * emptyMapList(){
+  MapList * list = malloc(sizeof(MapList));
+  list->head = NULL;
+  return list;
+}
+
+void addMap(GeneList *map, MapList *list){
+  MapNode * current = NULL;
+  if(list->head == NULL){
+    list->head = createMapNode(map);
+  }
+  else {
+    current = list->head; 
+    while (current->next!=NULL){
+      current = current->next;
+    }
+    current->next = createMapNode(map);
+  }
+}
+
+void displayMapList(MapList *list){
+  MapNode * current = list->head;
+  if(list->head == NULL) 
+    return;
+  while(current->next != NULL){
+    displayGeneList(current->map);
+    current = current->next;
+  }
+  displayGeneList(current->map);
+}
+
+void destroyMapList(MapList *list){
+  MapNode * current = list->head;
+  MapNode * next = current;
   while(current != NULL){
     next = current->next;
     free(current);
