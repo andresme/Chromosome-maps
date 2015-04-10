@@ -102,10 +102,10 @@ void displayGeneList(GeneList *list) {
   if(list->head == NULL) 
     return;
   while(current->next != NULL){
-    printf("%s -", current->gene);
+    printf("-- %f --  %s ", current->distance, current->gene);
     current = current->next;
   }
-  printf("%s -", current->gene);
+  printf("-- %f --  %s ", current->distance, current->gene);
 }
 
 void destroyGeneList(GeneList *list){
