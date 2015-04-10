@@ -21,6 +21,14 @@ int cmpDouble(double a, double b){
 	return fabs(a - b) < 0.0001;
 }
 
+int gtDouble(double a, double b){
+	return a > fabs(b - 0.0001);
+}
+
+int ltDouble(double a, double b){
+	return a < fabs(b - 0.0001);
+}
+
 int isValid(probMatrix *matrix){
 	int isValid = 1;
 	for(int i = 0; i < matrix->genes; i++){
@@ -144,14 +152,55 @@ GeneList * calculateGeneRoute(probMatrix *matrix){
 	GeneList *map = emptyNodeList();
 	int highestI = 0;
 	int highestJ = 0;
-	float largestDistance = 0;
+	double largestDistance = 0;
 
 	for(int i = 0; i < matrix->genes; i++){
-		for(int j = i+1; j < matrix->genes - 1; j++){
-
+		for(int j = i+1; j < matrix->genes; j++){
+			if (gtDouble(matrix->probabilityTable[i][j],largestDistance)){
+				largestDistance = matrix->probabilityTable[i][j];
+				highestI = i;
+				highestJ = j;
+			}
 		}
 	}
 
+	int visited[matrix->genes];
+	for(int i = 0; i < matrix->genes; i++){
+		visited[i] = 0;
+	}
+
+	addGene(matrix->names[highestI], 0, map);
+	visited[highestI] = 1;
+	int currentI = highestI;
+	int currentJ = 0;
+
+	int nearestJ = currentJ;
+	double nearestDistance = largestDistance;
+	double value = 0;
+
+
+	while(nearestJ != highestJ){
+		while(currentJ < matrix->genes){
+			value = matrix->probabilityTable[currentI][currentJ];
+			if (cmpDouble(value, 0.0) == 1 && currentI != currentJ){
+				value = matrix->probabilityTable[currentJ][currentI];
+			}
+			if (ltDouble(value, nearestDistance) == 1 && cmpDouble(value, 0.0) == 0 && visited[currentJ] == 0){
+				nearestDistance = value;
+				nearestJ = currentJ;
+			}
+			currentJ++;
+		}
+
+		addGene(matrix->names[nearestJ], value, map);
+		visited[nearestJ] = 1;
+
+		currentI = nearestJ;
+		currentJ = 0;
+		nearestDistance = largestDistance;
+	}
+
+	displayGeneList(map);
 	return map;
 }
 
