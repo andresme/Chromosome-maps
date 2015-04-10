@@ -139,3 +139,31 @@ MatrixList* possibleNumber(probMatrix *matrix){
 	}
 	return completeList;
 }
+
+GeneList * calculateGeneRoute(probMatrix *matrix){
+	GeneList *map = emptyNodeList();
+	int highestI = 0;
+	int highestJ = 0;
+	float largestDistance = 0;
+
+	for(int i = 0; i < matrix->genes; i++){
+		for(int j = i+1; j < matrix->genes - 1; j++){
+
+		}
+	}
+
+	return map;
+}
+
+MapList * calculatePossibleMaps(MatrixList *matrices){
+	MapList *result = emptyMapList();
+
+	MatrixNode *current = matrices->head;
+	while (current != NULL){
+		addMap(calculateGeneRoute(current->matrix), result);
+		current = current->next;
+	}
+	return result;
+}
+
+

@@ -7,14 +7,11 @@
 int main(int argc, char *argv[]){
 	
 	probMatrix* matrix = readFile(argv[1]);
-	// MatrixList *list = emptyMatrixList();
-	// add(matrix, list);
-	// add(matrix, list);
-	// display(list);
 	MatrixList *possibles = possibleNumber(matrix);
 	display(possibles);
 	
     gnuplot_ctrl* h1;
+	MapList *possibleMaps = calculatePossibleMaps(possibles);
 
     printf("*** example of gnuplot control through C ***\n") ;
     h1 = gnuplot_init();
