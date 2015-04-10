@@ -13,4 +13,10 @@ void destroy(MatrixList *list);
 void delete(MatrixNode *node, MatrixList *list);
 //void reverse(List * list);
 
+GeneList * emptyNodeList();
+void addGene(char *gene, double distance, GeneList *list);
+void displayGeneList(GeneList *list);
+void destroyGeneList(GeneList *list);
+//void reverse(List * list);
+
 #endif

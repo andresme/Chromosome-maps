@@ -18,4 +18,15 @@ typedef struct matrixList {
   MatrixNode * head; 
 } MatrixList;
 
+
+typedef struct geneNode {
+  char *gene;
+  double distance;
+  struct geneNode *next;
+} GeneNode;
+
+typedef struct geneList {
+  GeneNode * head; 
+} GeneList;
+
 #endif
