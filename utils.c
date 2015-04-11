@@ -238,7 +238,6 @@ GeneList * calculateGeneRoute(probMatrix *matrix){
 		nearestDistance = largestDistance;
 	}
 
-	displayGeneList(map);
 	return map;
 }
 
@@ -247,7 +246,10 @@ MapList * calculatePossibleMaps(MatrixList *matrices){
 
 	MatrixNode *current = matrices->head;
 	while (current != NULL){
-		addMap(calculateGeneRoute(current->matrix), result);
+		if(isValid(current->matrix) == 1){
+			printMatrix(current->matrix);
+			addMap(calculateGeneRoute(current->matrix), result);
+		}
 		current = current->next;
 	}
 	return result;

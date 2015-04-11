@@ -99,6 +99,19 @@ void addGene(char *gene, double distance, GeneList *list){
   }
 }
 
+void reverse(GeneList * list){
+   GeneNode * reversed = NULL;
+   GeneNode * current = list->head;
+   GeneNode * temp = NULL;
+   while(current != NULL){
+     temp = current;
+     current = current->next;
+     temp->next = reversed;
+     reversed = temp;
+   }
+   list->head = reversed;
+ }
+
 void displayGeneList(GeneList *list) {
   GeneNode * current = list->head;
   if(list->head == NULL)
@@ -107,7 +120,7 @@ void displayGeneList(GeneList *list) {
     printf("-- %f --  %s ", current->distance, current->gene);
     current = current->next;
   }
-  printf("-- %f --  %s ", current->distance, current->gene);
+  printf("-- %f --  %s \n", current->distance, current->gene);
 }
 
 void destroyGeneList(GeneList *list){
