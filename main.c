@@ -8,8 +8,12 @@ int main(int argc, char *argv[]){
 
 	probMatrix* matrix = readFile(argv[1]);
 	MatrixList *possibles = possibleNumber(matrix);
+	destroyMatrix(matrix);
 	display(possibles);
-
+	destroy(possibles);
+	
+	
+	
   //   gnuplot_ctrl* h1;
 	// MapList *possibleMaps = calculatePossibleMaps(possibles);
 	//

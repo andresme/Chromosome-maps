@@ -11,9 +11,10 @@
 #include "list.h"
 
 void printMatrix(probMatrix * matrix);
+void destroyMatrix(probMatrix *matrix);
 int cmpDouble(double a, double b);
 int isValid(probMatrix *matrix);
-int isAlreadyCalculated(int i, int j, double value, ValueList *list);
+int isAlreadyCalculated(probMatrix *matrix, MatrixList *list);
 MatrixList* possibleNumber(probMatrix *matrix);
 MapList * calculatePossibleMaps(MatrixList *matrices);
 

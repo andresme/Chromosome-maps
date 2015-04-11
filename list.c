@@ -48,6 +48,7 @@ void delete(MatrixNode *node, MatrixList *list){
       previous->next = current->next;
       if(current == list->head)
         list->head = current->next;
+        destroyMatrix(current->matrix);
       free(current);
       return;
     }
@@ -61,6 +62,7 @@ void destroy(MatrixList *list){
   MatrixNode * next = current;
   while(current != NULL){
     next = current->next;
+    destroyMatrix(current->matrix);
     free(current);
     current = next;
   }
