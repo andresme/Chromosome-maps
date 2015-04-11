@@ -1,8 +1,9 @@
 CC=gcc
-CFLAGS=-std=gnu99
+CFLAGS=-std=gnu99 -g
+CHECK=-Wall -Wextra
 
 mapper: utils.o file.o main.o list.o gnuplot_i.o
-	$(CC) -o mapper utils.o file.o main.o list.o gnuplot_i.o $(CFLAGS)
+	$(CC) $(CHECK) $(CFLAGS) -o mapper utils.o file.o main.o list.o gnuplot_i.o 
 
 clean: 
 	rm -f *.o mapper

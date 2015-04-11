@@ -8,6 +8,16 @@ typedef struct {
 	char *names[];
 } probMatrix;
 
+typedef struct valueNode{
+	int i;
+	int j;
+	double value;
+	struct valueNode *next;
+} ValueNode;
+
+typedef struct valueList {
+	ValueNode *head;
+} ValueList;
 
 typedef struct matrixNode {
   probMatrix *matrix;
@@ -15,7 +25,7 @@ typedef struct matrixNode {
 } MatrixNode;
 
 typedef struct matrixList {
-  MatrixNode * head; 
+  MatrixNode * head;
 } MatrixList;
 
 
@@ -26,7 +36,7 @@ typedef struct geneNode {
 } GeneNode;
 
 typedef struct geneList {
-  GeneNode * head; 
+  GeneNode * head;
 } GeneList;
 
 typedef struct mapNode {

@@ -1,10 +1,8 @@
 #include "file.h"
 
 probMatrix* readFile(char* fileName) {
-	char * fname;
 	FILE *file;
 	char content[1024], *token, *name, *number;
-	double **matrix;
 	probMatrix *pMatrix;
 	int genes = 0;
 	int line = 0;
@@ -20,7 +18,7 @@ probMatrix* readFile(char* fileName) {
 		token = strtok(content,"\n");
 		while(token != NULL){
 			if(line == 0){
-				char* tokenTemp = (char *)malloc(strlen(token) * sizeof(char));
+				char* tokenTemp = (char *) malloc((strlen(token) + 1) * sizeof(char));
 				strcpy(tokenTemp, token);
 				name = strtok(token, ",");
 				while(name != NULL){
@@ -41,6 +39,7 @@ probMatrix* readFile(char* fileName) {
 				for(int i = 0; i < pMatrix->genes; i++){
 					pMatrix->probabilityTable[i] = (double *) malloc(pMatrix->genes * sizeof(double));
 				}
+				free(tokenTemp);
 				line++;
 			} else {
 				number = strtok(token,",");
@@ -52,8 +51,10 @@ probMatrix* readFile(char* fileName) {
 				}
 			}
 			token = strtok(NULL, "\n");
-		}
+		}		
 	}
+	free(token);
+	fclose(file);
 	return pMatrix;
 }
 
@@ -80,4 +81,5 @@ void saveFile(probMatrix *matrix, char *fileName){
 			fprintf(file, prob, matrix->probabilityTable[i][j]);
 		}
 	}
+	fclose(file);
 }

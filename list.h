@@ -17,6 +17,12 @@ void addGene(char *gene, double distance, GeneList *list);
 void displayGeneList(GeneList *list);
 void destroyGeneList(GeneList *list);
 
+ValueList *emptyValueList();
+void addValue(int i, int j, double value, ValueList *list);
+void displayValueList(ValueList *list);
+void destroyValueList(ValueList *list);
+
+
 MapList * emptyMapList();
 void addMap(GeneList *map, MapList *list);
 void displayMapList(MapList *list);
