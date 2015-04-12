@@ -185,7 +185,6 @@ ValueList* predictCrossOver(probMatrix *matrix, char* i, char* j){
 }
 
 MatrixList* possibleNumber(probMatrix *matrix){
-	printf("genes: %d\n", matrix->genes);
 	MatrixList *list = emptyMatrixList();
 	add(copyMatrix(matrix), list);
 	MatrixList *completeList = emptyMatrixList();
