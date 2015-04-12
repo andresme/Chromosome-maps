@@ -4,11 +4,12 @@
 #include "main.h"
 #include <locale.h>
 #define SCALE 1000
+#define MAXBUFLEN 1000000
 
 GtkWidget *window;
-GtkEntry  *path;
-GtkWidget *matriz;
-GtkTextBuffer *buffer;
+GtkEntry  *gen1, *gen2;
+GtkWidget *matriz, *results;
+GtkTextBuffer *buffer, *bufferResults;
 GtkBuilder *builder;
 probMatrix *matrix;
 
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
 	
     builder = gtk_builder_new();
     
-    if(!gtk_builder_add_from_file(builder, "data.glade", &error)) {
+    if(!gtk_builder_add_from_file(builder, "mapper_gui.glade", &error)) {
 		g_warning("%s", error->message);
 		g_free(error);
 		return(1);
@@ -52,9 +53,12 @@ int main(int argc, char *argv[]) {
 
 void getGtkWidgets(GtkBuilder *builder){
 		window = GTK_WIDGET(gtk_builder_get_object(builder, "data"));
-		path = (GtkEntry *) GTK_WIDGET(gtk_builder_get_object(builder, "path"));
+		gen1 = (GtkEntry *) GTK_WIDGET(gtk_builder_get_object(builder, "gen1"));
+		gen2 = (GtkEntry *) GTK_WIDGET(gtk_builder_get_object(builder, "gen2"));
 		matriz = GTK_WIDGET(gtk_builder_get_object(builder, "matriz"));
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (matriz));
+		results = GTK_WIDGET(gtk_builder_get_object(builder, "results"));
+		bufferResults = gtk_text_view_get_buffer (GTK_TEXT_VIEW (results));
 		gtk_text_buffer_set_text (buffer, "G01,G02,G03,G04\n0,0.05,0.07,0.15\n0,0,0.02,0.10\n0,0,0,0.08\n0,0,0,0", -1);
 	}
 
@@ -64,14 +68,46 @@ void on_saveFile_clicked(GtkButton *button, gpointer data){
 }
 
 void on_loadFile_clicked(GtkButton *button, gpointer data){
-	char *pathFile = (char *) gtk_entry_get_text(path);
-	matrix = readFile(pathFile);
-	printMatrix(matrix);
-	char *dataFile = dataFromFile(pathFile);
-	gtk_text_buffer_set_text (buffer, dataFile, -1);
+	GtkWidget *dialog;
+	char *filename;
+    dialog = gtk_file_chooser_dialog_new ("Cargar Archivo ",
+                      NULL,
+                      GTK_FILE_CHOOSER_ACTION_SAVE,
+                      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                      NULL);
+    if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT){
+		gboolean result;
+		GError *err = NULL;
+		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		printf("%s\n", filename);
+		matrix = readFile(filename);
+		printMatrix(matrix);
+		char *dataFile = dataFromFile(filename);
+		gtk_text_buffer_set_text (buffer, dataFile, -1);
+		}
+	gtk_widget_destroy (dialog);
 }
 
 void on_predict_clicked(GtkButton *button, gpointer data){
+	GtkTextIter start, end;
+	char * algo_magico = "%s -> %s = %1.4f\n";
+	char *textGen1 = (char *) gtk_entry_get_text(gen1);
+	char *textGen2 = (char *) gtk_entry_get_text(gen2);
+	ValueList* list = predictCrossOver(matrix, textGen1, textGen2);
+	ValueNode* current = list->head;
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer (results);
+	gtk_text_buffer_set_text (buffer, "\0", -1);
+	while(current != NULL){
+		buffer = gtk_text_view_get_buffer(results);
+		gtk_text_buffer_get_bounds(buffer, &start, &end);
+		int size = strlen(current->i)+strlen(current->j)+14;
+		char * possible = malloc(size*sizeof(char));
+		sprintf(possible, algo_magico, current->i, current->j, current->value);
+		gtk_text_buffer_insert (buffer, &end, possible, -1);
+		current = current->next;
+	}
+	destroyValueList(list);
 }
 
 void on_generate_clicked(GtkButton *button, gpointer data){
@@ -138,30 +174,17 @@ char * save(){
 }
 
 char* dataFromFile(char* path){
-	char *source = NULL;
+	char source[MAXBUFLEN + 1];
 	FILE *fp = fopen(path, "r");
 	if (fp != NULL) {
-	    /* Go to the end of the file. */
-	    if (fseek(fp, 0L, SEEK_END) == 0) {
-	        /* Get the size of the file. */
-	        long bufsize = ftell(fp);
-	        if (bufsize == -1) { /* Error */ }
-	
-	        /* Allocate our buffer to that size. */
-	        source = malloc(sizeof(char) * (bufsize + 1));
-	
-	        /* Go back to the start of the file. */
-	        if (fseek(fp, 0L, SEEK_SET) != 0) { /* Error */ }
-	
-	        /* Read the entire file into memory. */
-	        size_t newLen = fread(source, sizeof(char), bufsize, fp);
-	        if (newLen == 0) {
-	            fputs("Error reading file", stderr);
-	        } else {
-	            source[++newLen] = '\0'; /* Just to be safe. */
-	        }
-	    }
-	    fclose(fp);
+		size_t newLen = fread(source, sizeof(char), MAXBUFLEN, fp);
+		if (newLen == 0) {
+			fputs("Error reading file", stderr);
+		} else {
+			source[++newLen] = '\0'; /* Just to be safe. */
+		}
+
+		fclose(fp);
 	}
 	return source;
 }
