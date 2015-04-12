@@ -9,7 +9,9 @@
 #include "structs.h"
 
 
-
 void plotMaps(MapList *list);
+char* dataFromFile(char* path);
+void getGtkWidgets(GtkBuilder *builder);
+char * save();
 
 #endif
