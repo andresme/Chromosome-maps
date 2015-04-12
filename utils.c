@@ -108,6 +108,81 @@ int isAlreadyCalculated(probMatrix *matrix, MatrixList *list){
 	return isEqualToSomeMatrix;
 }
 
+int valueAlreadyPredicted(ValueList *list, double value){
+	ValueNode *node = list->head;
+	if(node == NULL){
+		return 0;
+	}
+	while(node != NULL){
+		if(cmpDouble(node->value, value) == 1){
+			return 1;
+		} 
+		node = node->next;
+	}
+	return 0;
+}
+
+ValueList* predictCrossOver(probMatrix *matrix, char* i, char* j){
+	int indexi = 0;
+	int indexj = 0;
+	int foundi = 0;
+	int foundj = 0;
+	ValueList *possibles = emptyValueList();
+	for(indexi = 0; indexi < matrix->genes; indexi++){
+		if(strcmp(i, matrix->names[indexi]) == 0){
+			foundi = 1;
+			break;
+		}
+	} 
+	
+	for(indexj = 0; indexj < matrix->genes; indexj++){
+		if(strcmp(j, matrix->names[indexj]) == 0){
+			foundj = 1;
+			break;
+		}
+	}
+	
+	if(foundi == 1 && foundj == 1 ){
+		if(indexi > indexj){
+			int temp = indexi;
+			indexi = indexj;
+			indexj = temp;
+		}
+		for(int m = 1; indexj+m < matrix->genes; m++){
+			double first = 0;
+			double second = 0;
+			double sum2 = matrix->probabilityTable[indexj][indexj+m];
+			double checkSum = matrix->probabilityTable[indexi][indexj+m];
+			if(cmpDouble(sum2, -1) == 0 && cmpDouble(checkSum, -1) == 0){
+				first = fabs(checkSum-sum2);
+				second = checkSum+sum2;
+				if(valueAlreadyPredicted(possibles, first) == 0){
+					addValue(i, j, first, possibles);
+				} 
+				if(valueAlreadyPredicted(possibles, second) == 0){
+					addValue(i, j, second, possibles);
+				} 
+			}
+		}
+		for(int m = indexj-1; m > 0; m--){
+			double first = 0;
+			double second = 0;
+			double sum1 = matrix->probabilityTable[indexi][m];
+			double sum2 = matrix->probabilityTable[m][indexj];
+			if(cmpDouble(sum1, -1) == 0 && cmpDouble(sum2, -1) == 0){
+				first = fabs(sum1-sum2);
+				second = sum1+sum2;
+				if(valueAlreadyPredicted(possibles, first) == 0){
+					addValue(i, j, first, possibles);
+				} 
+				if(valueAlreadyPredicted(possibles, second) == 0){
+					addValue(i, j, second, possibles);
+				} 
+			}
+		}
+	}
+	return possibles;
+}
 
 MatrixList* possibleNumber(probMatrix *matrix){
 	printf("genes: %d\n", matrix->genes);
@@ -123,6 +198,7 @@ MatrixList* possibleNumber(probMatrix *matrix){
 	}
 	
 	while(current != NULL){
+		int found = 0;
 		for(int i = 0; i < current->matrix->genes; i++){
 			for(int j = i+1; j < current->matrix->genes - 1; j++){
 				double sum1 = current->matrix->probabilityTable[i][j];
@@ -149,6 +225,7 @@ MatrixList* possibleNumber(probMatrix *matrix){
 					indexJ = j+1;
 				}
 				if(indexI != -1 && indexJ != -1){
+					found = 1;
 					probMatrix* firstMatrix = copyMatrix(current->matrix);
 					firstMatrix->probabilityTable[indexI][indexJ] = first;
 					if(isComplete(firstMatrix) == 1 && isAlreadyCalculated(firstMatrix, completeList) == 0){
@@ -177,9 +254,9 @@ MatrixList* possibleNumber(probMatrix *matrix){
 							destroyMatrix(secondMatrix);
 						}
 					}
-				}
-			}
-		}
+				}if(found == 1) break;
+			} if(found == 1) break;
+		} 
 		current = current->next;
 	}
 	destroy(list);

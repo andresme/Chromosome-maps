@@ -20,19 +20,19 @@ probMatrix* readFile(char* fileName) {
 			if(line == 0){
 				char* tokenTemp = (char *) malloc((strlen(token) + 1) * sizeof(char));
 				strcpy(tokenTemp, token);
-				name = strtok(token, "|");
+				name = strtok(token, ",");
 				while(name != NULL){
 					genes++;
-					name = strtok(NULL, "|");
+					name = strtok(NULL, ",");
 				}
 				pMatrix = (probMatrix *) malloc(sizeof(probMatrix) + genes * sizeof(char *));
 				pMatrix->genes = genes;
-				name = strtok(tokenTemp, "|");
+				name = strtok(tokenTemp, ",");
 				int nameIndex = 0;
 				while(name != NULL) {
 					pMatrix->names[nameIndex] = (char *) malloc((strlen(name) + 1) * sizeof(char));
 					strcpy(pMatrix->names[nameIndex], name);
-					name = strtok(NULL, "|");
+					name = strtok(NULL, ",");
 					nameIndex++;
 				}
 				pMatrix->probabilityTable = (double **) malloc(pMatrix->genes * sizeof(double *));
@@ -42,9 +42,7 @@ probMatrix* readFile(char* fileName) {
 				free(tokenTemp);
 				line++;
 			} else {
-				number = strtok(token,"|");
-				printf("%s = %f\n", number, strtod(number, NULL));
-				
+				number = strtok(token,",");
 				pMatrix->probabilityTable[i][j] = atof(number);
 				j++;
 				if(j >= pMatrix->genes){
@@ -76,7 +74,7 @@ void saveFile(probMatrix *matrix, char *fileName){
 	}
 	for(int i = 0; i < matrix->genes; i++){
 		for(int j = 0; j < matrix->genes; j++){
-			char *prob = "%lf|";
+			char *prob = "%lf,";
 			if(j == matrix->genes -1){
 				prob = "%lf\n";
 			}

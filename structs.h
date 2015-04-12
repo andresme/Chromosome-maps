@@ -9,8 +9,8 @@ typedef struct {
 } probMatrix;
 
 typedef struct valueNode{
-	int i;
-	int j;
+	char *i;
+	char *j;
 	double value;
 	struct valueNode *next;
 } ValueNode;

@@ -143,16 +143,18 @@ ValueList * emptyValueList(){
   return list;
 }
 
-ValueNode * createValueNode(int i, int j, double value){
+ValueNode * createValueNode(char *i, char *j, double value){
   ValueNode * newNode = malloc(sizeof(ValueNode));
-  newNode->i = i;
-  newNode->j = j;
+  newNode->i = malloc((strlen(i) + 1)  * sizeof(char));
+  newNode->j = malloc((strlen(j) + 1)  * sizeof(char));
+  strcpy(newNode->i, i);
+  strcpy(newNode->j, j);
   newNode->value = value;
   newNode->next = NULL;
   return newNode;
 }
 
-void addValue(int i, int j, double value, ValueList *list){
+void addValue(char *i, char *j, double value, ValueList *list){
   ValueNode *current = NULL;
   if(list->head == NULL){
     list->head = createValueNode(i, j, value);
@@ -171,10 +173,10 @@ void displayValueList(ValueList *list){
   if(list->head == NULL)
     return;
   while(current->next != NULL){
-    printf("%d, %d = %f\n", current->i, current->j, current->value);
+    printf("%s, %s = %f\n", current->i, current->j, current->value);
     current = current->next;
   }
-  printf("%d, %d = %f\n", current->i, current->j, current->value);
+  printf("%s, %s = %f\n", current->i, current->j, current->value);
 }
 
 
@@ -183,6 +185,8 @@ void destroyValueList(ValueList *list){
   ValueNode * next = current;
   while(current != NULL){
     next = current->next;
+    free(current->i);
+    free(current->j);
     free(current);
     current = next;
   }

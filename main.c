@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <gtk/gtk.h> 
 #include "main.h"
+#include <locale.h>
 #define SCALE 1000
 
 GtkWidget *window;
@@ -11,7 +12,22 @@ GtkTextBuffer *buffer;
 GtkBuilder *builder;
 probMatrix *matrix;
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
+	matrix = readFile(argv[1]);
+	
+	//printMatrix(matrix);
+	
+	MatrixList *possibles = possibleNumber(matrix);
+	MapList *maps = calculatePossibleMaps(possibles);
+	displayMapList(maps);
+	plotMaps(maps);
+	
+	//displayMapList(maps);
+	destroyMatrix(matrix);
+	destroy(possibles);
+	destroyMapList(maps);
+	
+	
 	GError *error = NULL;
 	gtk_init(&argc, &argv);
 	
@@ -26,8 +42,11 @@ int main(int argc, char **argv) {
 	gtk_builder_connect_signals(builder, NULL);
 	g_object_unref(G_OBJECT(builder));
 	gtk_widget_show(window);
+	setlocale (LC_ALL,"C");
 	gtk_main();
 
+	
+	
 	return 0;
 }
 
@@ -37,8 +56,6 @@ void getGtkWidgets(GtkBuilder *builder){
 		matriz = GTK_WIDGET(gtk_builder_get_object(builder, "matriz"));
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (matriz));
 		gtk_text_buffer_set_text (buffer, "G01,G02,G03,G04\n0,0.05,0.07,0.15\n0,0,0.02,0.10\n0,0,0,0.08\n0,0,0,0", -1);
-		
-		
 	}
 
 void on_saveFile_clicked(GtkButton *button, gpointer data){
@@ -68,15 +85,20 @@ void on_generate_clicked(GtkButton *button, gpointer data){
 	gtk_text_buffer_get_bounds (buffer, &start, &end);
 	text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 	result = g_file_set_contents (filename, text, -1, &err);
+	
 	matrix = readFile(filename);
 	printMatrix(matrix);
 	MatrixList *possibles = possibleNumber(matrix);
-	display(possibles);
 	MapList *maps = calculatePossibleMaps(possibles);
 	displayMapList(maps);
-	destroy(possibles);
 	plotMaps(maps);
-	destroyMapList(maps);
+	//destroy(possibles);
+	//destroyMapList(maps);
+	
+    //while(1){
+	 	//tiene que seguir corriendo para poder hacer zoom/pan
+	// 	printf(" ");
+	//};
 }
 
 

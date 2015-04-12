@@ -19,7 +19,7 @@ void reverse(GeneList * list);
 void destroyGeneList(GeneList *list);
 
 ValueList *emptyValueList();
-void addValue(int i, int j, double value, ValueList *list);
+void addValue(char *i, char *j, double value, ValueList *list);
 void displayValueList(ValueList *list);
 void destroyValueList(ValueList *list);
 
