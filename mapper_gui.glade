@@ -220,6 +220,7 @@ Ingresar distancias entre genes:
                       <object class="GtkTextView" id="results">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="editable">False</property>
                       </object>
                     </child>
                   </object>
