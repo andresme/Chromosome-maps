@@ -198,6 +198,7 @@ MatrixList* possibleNumber(probMatrix *matrix){
 	}
 	
 	while(current != NULL){
+		int found = 0;
 		for(int i = 0; i < current->matrix->genes; i++){
 			for(int j = i+1; j < current->matrix->genes - 1; j++){
 				double sum1 = current->matrix->probabilityTable[i][j];
@@ -224,6 +225,7 @@ MatrixList* possibleNumber(probMatrix *matrix){
 					indexJ = j+1;
 				}
 				if(indexI != -1 && indexJ != -1){
+					found = 1;
 					probMatrix* firstMatrix = copyMatrix(current->matrix);
 					firstMatrix->probabilityTable[indexI][indexJ] = first;
 					if(isComplete(firstMatrix) == 1 && isAlreadyCalculated(firstMatrix, completeList) == 0){
@@ -252,9 +254,9 @@ MatrixList* possibleNumber(probMatrix *matrix){
 							destroyMatrix(secondMatrix);
 						}
 					}
-				}
-			}
-		}
+				}if(found == 1) break;
+			} if(found == 1) break;
+		} 
 		current = current->next;
 	}
 	destroy(list);
