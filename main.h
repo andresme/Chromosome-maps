@@ -8,4 +8,8 @@
 #include "list.h"
 #include "structs.h"
 
+
+
+void plotMaps(MapList *list);
+
 #endif

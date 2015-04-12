@@ -22,11 +22,11 @@ int cmpDouble(double a, double b){
 }
 
 int gtDouble(double a, double b){
-	return a > fabs(b - 0.0001);
+	return a > b - 0.0001;
 }
 
 int ltDouble(double a, double b){
-	return a < fabs(b - 0.0001);
+	return a < b - 0.0001;
 }
 
 int isValid(probMatrix *matrix){
@@ -230,7 +230,7 @@ GeneList * calculateGeneRoute(probMatrix *matrix){
 			currentJ++;
 		}
 
-		addGene(matrix->names[nearestJ], value, map);
+		addGene(matrix->names[nearestJ], nearestDistance, map);
 		visited[nearestJ] = 1;
 
 		currentI = nearestJ;
