@@ -128,6 +128,7 @@ void destroyGeneList(GeneList *list){
   GeneNode * next = current;
   while(current != NULL){
     next = current->next;
+    //free(current->gene);
     free(current);
     current = next;
   }
@@ -235,6 +236,7 @@ void destroyMapList(MapList *list){
   MapNode * next = current;
   while(current != NULL){
     next = current->next;
+    destroyGeneList(current->map);
     free(current);
     current = next;
   }

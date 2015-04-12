@@ -34,12 +34,12 @@ int isValid(probMatrix *matrix){
 	for(int i = 0; i < matrix->genes; i++){
 		for(int j = i+1; j < matrix->genes - 1; j++){
 			double sum1 = matrix->probabilityTable[i][j];
-			for(int m = 1; j+m < matrix->genes; m++){
-				double sum2 = matrix->probabilityTable[j][j+m];
-				double checkSum = matrix->probabilityTable[i][j+m];
+			for(int m = j+1; m < matrix->genes; m++){
+				double sum2 = matrix->probabilityTable[j][m];
+				double checkSum = matrix->probabilityTable[i][m];
 				if(cmpDouble(fabs(sum1-sum2), checkSum) != 1 &&
 					cmpDouble(sum1 + sum2, checkSum) != 1){
-						// printf("invalid: %d, %d +- %d, %d = %d, %d\n", i,j,j,j+m,i,j+m);
+						//printf("invalid: %d, %d +- %d, %d = %d, %d\n", i,j,j,j+m,i,j+m);
 						isValid = 0;
 						break;
 				}
@@ -108,62 +108,73 @@ int isAlreadyCalculated(probMatrix *matrix, MatrixList *list){
 	return isEqualToSomeMatrix;
 }
 
+
 MatrixList* possibleNumber(probMatrix *matrix){
+	printf("genes: %d\n", matrix->genes);
 	MatrixList *list = emptyMatrixList();
 	add(copyMatrix(matrix), list);
 	MatrixList *completeList = emptyMatrixList();
 	MatrixNode *current = list->head;
+	int matricesFound = 0;
+	if(isComplete(matrix) == 1){
+		add(copyMatrix(matrix), completeList);
+		destroy(list);
+		return completeList;
+	}
+	
 	while(current != NULL){
 		for(int i = 0; i < current->matrix->genes; i++){
 			for(int j = i+1; j < current->matrix->genes - 1; j++){
 				double sum1 = current->matrix->probabilityTable[i][j];
-				for(int m = 1; i+m < current->matrix->genes-m; m++){
-					double sum2 = current->matrix->probabilityTable[j][j+m];
-					double checkSum = current->matrix->probabilityTable[i][j+m];
-					double first = 0;
-					double second = 0;
-					int indexI = -1;
-					int indexJ = -1;
-					if(cmpDouble(sum1, -1) == 1 && cmpDouble(sum2, -1) == 0 && cmpDouble(checkSum, -1) == 0){
-						first = fabs(checkSum-sum2);
-						second = checkSum+sum2;
-						indexI = i;
-						indexJ = j;
-					} else if(cmpDouble(sum2, -1) == 1 && cmpDouble(sum1, -1) == 0 && cmpDouble(checkSum, -1) == 0){
-						first = fabs(checkSum-sum1);
-						second = checkSum+sum1;
-						indexI = j;
-						indexJ = j+m;
-					} else if(cmpDouble(checkSum, -1) == 1 && cmpDouble(sum1, -1) == 0 && cmpDouble(sum2, -1) == 0){
-						first = fabs(sum1-sum2);
-						second = sum1+sum2;
-						indexI = i;
-						indexJ = j+m;
+				double sum2 = current->matrix->probabilityTable[j][j+1];
+				double checkSum = current->matrix->probabilityTable[i][j+1];
+				double first = 0;
+				double second = 0;
+				int indexI = -1;
+				int indexJ = -1;
+				if(cmpDouble(sum1, -1) == 1 && cmpDouble(sum2, -1) == 0 && cmpDouble(checkSum, -1) == 0){
+					first = fabs(checkSum-sum2);
+					second = checkSum+sum2;
+					indexI = i;
+					indexJ = j;
+				} else if(cmpDouble(sum2, -1) == 1 && cmpDouble(sum1, -1) == 0 && cmpDouble(checkSum, -1) == 0){
+					first = fabs(checkSum-sum1);
+					second = checkSum+sum1;
+					indexI = j;
+					indexJ = j+1;
+				} else if(cmpDouble(checkSum, -1) == 1 && cmpDouble(sum1, -1) == 0 && cmpDouble(sum2, -1) == 0){
+					first = fabs(sum1-sum2);
+					second = sum1+sum2;
+					indexI = i;
+					indexJ = j+1;
+				}
+				if(indexI != -1 && indexJ != -1){
+					probMatrix* firstMatrix = copyMatrix(current->matrix);
+					firstMatrix->probabilityTable[indexI][indexJ] = first;
+					if(isComplete(firstMatrix) == 1 && isAlreadyCalculated(firstMatrix, completeList) == 0){
+						//printMatrix(firstMatrix);
+						matricesFound++;
+						add(firstMatrix, completeList);
+					} else if(isAlreadyCalculated(firstMatrix, list) == 0){
+						matricesFound++;
+						//printMatrix(firstMatrix);
+						add(firstMatrix, list);
+					} else {
+						destroyMatrix(firstMatrix);
 					}
-					if(indexI != -1 && indexJ != -1){
-						probMatrix* firstMatrix = copyMatrix(current->matrix);
-						firstMatrix->probabilityTable[indexI][indexJ] = first;
-						if(isComplete(firstMatrix) == 1 && isAlreadyCalculated(firstMatrix, completeList) == 0){
-							//printMatrix(firstMatrix);
-							add(firstMatrix, completeList);
-						} else if(isAlreadyCalculated(firstMatrix, list) == 0){
-							//printMatrix(firstMatrix);
-							add(firstMatrix, list);
+					if(cmpDouble(first, second) == 0){
+						probMatrix* secondMatrix = copyMatrix(current->matrix);
+						secondMatrix->probabilityTable[indexI][indexJ] = second;
+						if(isComplete(secondMatrix) == 1 && isAlreadyCalculated(secondMatrix, completeList) == 0){
+							//printMatrix(secondMatrix);
+							add(secondMatrix, completeList);
+							matricesFound++;
+						} else if(isAlreadyCalculated(secondMatrix, list) == 0){
+							//printMatrix(secondMatrix);
+							matricesFound++;
+							add(secondMatrix, list);
 						} else {
-							destroyMatrix(firstMatrix);
-						}
-						if(cmpDouble(first, second) == 0){
-							probMatrix* secondMatrix = copyMatrix(current->matrix);
-							secondMatrix->probabilityTable[indexI][indexJ] = second;
-							if(isComplete(secondMatrix) == 1 && isAlreadyCalculated(secondMatrix, completeList) == 0){
-								//printMatrix(secondMatrix);
-								add(secondMatrix, completeList);
-							} else if(isAlreadyCalculated(secondMatrix, list) == 0){
-								//printMatrix(secondMatrix);
-								add(secondMatrix, list);
-							} else {
-								destroyMatrix(secondMatrix);
-							}
+							destroyMatrix(secondMatrix);
 						}
 					}
 				}
@@ -247,7 +258,6 @@ MapList * calculatePossibleMaps(MatrixList *matrices){
 	MatrixNode *current = matrices->head;
 	while (current != NULL){
 		if(isValid(current->matrix) == 1){
-			printMatrix(current->matrix);
 			addMap(calculateGeneRoute(current->matrix), result);
 		}
 		current = current->next;

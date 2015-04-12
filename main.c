@@ -5,16 +5,19 @@
 
 int main(int argc, char *argv[]){
 	probMatrix* matrix = readFile(argv[1]);
+	//printMatrix(matrix);
+	
 	MatrixList *possibles = possibleNumber(matrix);
 	MapList *maps = calculatePossibleMaps(possibles);
-	displayMapList(maps);
+	//displayMapList(maps);
 	plotMaps(maps);
 	
 	//displayMapList(maps);
 	destroyMatrix(matrix);
 	destroy(possibles);
+	destroyMapList(maps);
 	
-     while(1){
+    while(1){
 	 	//tiene que seguir corriendo para poder hacer zoom/pan
 	 	printf(" ");
 	};
@@ -38,12 +41,18 @@ void plotMaps(MapList *list){
 	char *pattern = "%1.4f title 'map %d'";
 	char *label = "set label '%s' at %1.4f,%1.4f";
 	int i = 0;
-	gnuplot_cmd(h1, "set xrange[0:0.5]");
-	gnuplot_cmd(h1, "set yrange[0:0.010]");
-	gnuplot_cmd(h1, "plot \\");
+	
+	if(current != NULL){
+		gnuplot_cmd(h1, "set xrange[0:0.5]");
+		gnuplot_cmd(h1, "set yrange[0:0.010]");
+		gnuplot_cmd(h1, "plot \\");
+	} else {
+		printf("No maps found\n");
+		return;
+	}
 	while(current->next != NULL){
 		int digits = GetNumberOfDigits(i);
-		char *currentCmd = malloc((digits + 22) * sizeof(char));
+		char *currentCmd = malloc((digits + 23) * sizeof(char));
 		sprintf(currentCmd, cmd, ((double)i)/SCALE, i);
 		printf("%s\n", currentCmd);
 		gnuplot_cmd(h1, currentCmd);
@@ -51,14 +60,13 @@ void plotMaps(MapList *list){
 		current = current->next;
 		free(currentCmd);
 	}
-	if( i == 0){
+	if(i == 0){
 		gnuplot_cmd(h1, "0 title 'map 0'");
-		gnuplot_cmd(h1, "0.25 title 'map 1'");
 	} else {
 		int digits = GetNumberOfDigits(i);
 		char *lastCmd = malloc((digits + 19) * sizeof(char));
 		sprintf(lastCmd, pattern, ((double)i)/SCALE, i);
-		printf("%s\n", lastCmd);
+		//printf("%s\n", lastCmd);
 		gnuplot_cmd(h1, lastCmd);
 		free(lastCmd);
 	}
@@ -74,7 +82,7 @@ void plotMaps(MapList *list){
 			char *labelCmd = malloc((24 + strlen(node->gene)) * sizeof(char));
 			value = value + node->distance;
 			sprintf(labelCmd, label, node->gene, value, ((double)i)/SCALE);
-			printf("%s\n", labelCmd);
+			//printf("%s\n", labelCmd);
 			gnuplot_cmd(h1, labelCmd);
 			node = node->next;
 			free(labelCmd);
