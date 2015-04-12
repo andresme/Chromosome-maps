@@ -15,6 +15,7 @@ void destroyMatrix(probMatrix *matrix);
 int cmpDouble(double a, double b);
 int isValid(probMatrix *matrix);
 int isAlreadyCalculated(probMatrix *matrix, MatrixList *list);
+ValueList* predictCrossOver(probMatrix *matrix, char* i, char* j);
 MatrixList* possibleNumber(probMatrix *matrix);
 MapList * calculatePossibleMaps(MatrixList *matrices);
 

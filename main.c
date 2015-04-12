@@ -5,11 +5,12 @@
 
 int main(int argc, char *argv[]){
 	probMatrix* matrix = readFile(argv[1]);
+
 	//printMatrix(matrix);
 	
 	MatrixList *possibles = possibleNumber(matrix);
 	MapList *maps = calculatePossibleMaps(possibles);
-	//displayMapList(maps);
+	displayMapList(maps);
 	plotMaps(maps);
 	
 	//displayMapList(maps);
@@ -17,10 +18,10 @@ int main(int argc, char *argv[]){
 	destroy(possibles);
 	destroyMapList(maps);
 	
-    while(1){
+    //while(1){
 	 	//tiene que seguir corriendo para poder hacer zoom/pan
-	 	printf(" ");
-	};
+	// 	printf(" ");
+	//};
 	return 0;
 }
 
