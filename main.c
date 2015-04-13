@@ -29,6 +29,8 @@ int main(int argc, char *argv[]) {
 	g_object_unref(G_OBJECT(builder));
 	gtk_widget_show(window);
 	setlocale (LC_ALL,"C");
+	 g_signal_connect(G_OBJECT(window), "destroy",
+                G_CALLBACK(gtk_main_quit), NULL);
 	gtk_main();
 		
 	return 0;
@@ -42,7 +44,11 @@ void getGtkWidgets(GtkBuilder *builder){
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (matriz));
 		results = GTK_WIDGET(gtk_builder_get_object(builder, "results"));
 		bufferResults = gtk_text_view_get_buffer (GTK_TEXT_VIEW (results));
-		gtk_text_buffer_set_text (buffer, "G01,G02,G03,G04\n0,0.05,0.07,0.15\n0,0,0.02,0.10\n0,0,0,0.08\n0,0,0,0", -1);
+		char *filename = "example.txt";
+		matrix = readFile(filename);
+		char *dataFile = dataFromFile(filename);
+		gtk_text_buffer_set_text (buffer, dataFile, -1);
+		free(dataFile);
 	}
 
 void on_saveFile_clicked(GtkButton *button, gpointer data){
@@ -68,6 +74,8 @@ void on_loadFile_clicked(GtkButton *button, gpointer data){
 		//printMatrix(matrix);
 		char *dataFile = dataFromFile(filename);
 		gtk_text_buffer_set_text (buffer, dataFile, -1);
+		free(dataFile);
+		free(filename);
 		}
 	gtk_widget_destroy (dialog);
 }
@@ -77,6 +85,8 @@ void on_predict_clicked(GtkButton *button, gpointer data){
 	char * algo_magico = "%s -> %s = %1.4f\n";
 	char *textGen1 = (char *) gtk_entry_get_text(gen1);
 	char *textGen2 = (char *) gtk_entry_get_text(gen2);
+	if(textGen1 == NULL || textGen2 == NULL || strlen(textGen1) == 0 ||
+		strlen(textGen2) == 0)  return;
 	ValueList* list = predictCrossOver(matrix, textGen1, textGen2);
 	ValueNode* current = list->head;
 	GtkTextBuffer *buffer = gtk_text_view_get_buffer ((GtkTextView *)results);
