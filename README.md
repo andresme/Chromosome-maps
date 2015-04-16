@@ -1,12 +1,8 @@
 # Chromosome-maps
+To be able to compile this project you need the following:
 
-Para compilar:
+* Gtk 3+ 
+* Gnuplot
+* Glade
 
-gcc -std=c99 file.c -o file -> para probar lectura de archivos
-gcc -std=c99 main.c -o main -> para compilar el main
-
-aun falta el makefile y juntar todo, eliminar el main() de file, etc...
-
-para probar lectura de archivos:
-
-./file test.txt
+Just clone this repo, and open a terminal, navigate to the folder containing the source and execute the make command. it will generate the "mapper" file, which you can execute with ./mapper, and the load and modify the input that from there.
