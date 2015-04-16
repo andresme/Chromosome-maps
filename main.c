@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 	g_object_unref(G_OBJECT(builder));
 	gtk_widget_show(window);
 	setlocale (LC_ALL,"C");
-	 g_signal_connect(G_OBJECT(window), "destroy",
+	g_signal_connect(G_OBJECT(window), "destroy",
                 G_CALLBACK(gtk_main_quit), NULL);
 	gtk_main();
 		
@@ -53,7 +53,9 @@ void getGtkWidgets(GtkBuilder *builder){
 
 void on_saveFile_clicked(GtkButton *button, gpointer data){
 	char *pathFile = save();
-	matrix = readFile(pathFile);
+	if(pathFile != NULL && strcmp(pathFile, "")){
+		matrix = readFile(pathFile);
+	}
 }
 
 void on_loadFile_clicked(GtkButton *button, gpointer data){
@@ -82,7 +84,7 @@ void on_loadFile_clicked(GtkButton *button, gpointer data){
 
 void on_predict_clicked(GtkButton *button, gpointer data){
 	GtkTextIter start, end;
-	char * algo_magico = "%s -> %s = %1.4f\n";
+	char * textFormat = "%s -> %s = %1.4f\n";
 	char *textGen1 = (char *) gtk_entry_get_text(gen1);
 	char *textGen2 = (char *) gtk_entry_get_text(gen2);
 	if(textGen1 == NULL || textGen2 == NULL || strlen(textGen1) == 0 ||
@@ -96,7 +98,7 @@ void on_predict_clicked(GtkButton *button, gpointer data){
 		gtk_text_buffer_get_bounds(buffer, &start, &end);
 		int size = strlen(current->i)+strlen(current->j)+14;
 		char * possible = malloc(size*sizeof(char));
-		sprintf(possible, algo_magico, current->i, current->j, current->value);
+		sprintf(possible, textFormat, current->i, current->j, current->value);
 		gtk_text_buffer_insert (buffer, &end, possible, -1);
 		current = current->next;
 	}
