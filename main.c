@@ -116,12 +116,15 @@ void on_generate_clicked(GtkButton *button, gpointer data){
 	gtk_text_buffer_get_bounds (buffer, &start, &end);
 	text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 	result = g_file_set_contents (filename, text, -1, &err);
-	
 	matrix = readFile(filename);
 	//printMatrix(matrix);
 	MatrixList *possibles = possibleNumber(matrix);
 	MapList *maps = calculatePossibleMaps(possibles);
-	plotMaps(maps);
+	if(maps->head == NULL){
+		printf("No possible maps found!!\n");
+	} else {
+		plotMaps(maps);
+	}
 }
 
 
