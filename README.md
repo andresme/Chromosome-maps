@@ -1,8 +1,20 @@
 # Chromosome-maps
 To be able to compile this project you need the following:
 
-* Gtk 3+ 
-* Gnuplot
-* Glade
+* Gtk 3
+* Gnuplot (sudo apt-get install gnuplot-qt)
+* Glade (sudo apt-get install glade)
 
-Just clone this repo, and open a terminal, navigate to the folder containing the source and execute the make command. it will generate the "mapper" file, which you can execute with ./mapper, and the load and modify the input that from there.
+This program was tested on ubuntu gnome 14.10.
+
+use the following commands to run this:
+
+cd ~/to/src/directory
+make
+./mapper
+
+
+This project was developed by:
+- Melisa Carranza.
+- Irene Gamboa.
+- Andres Morales.
